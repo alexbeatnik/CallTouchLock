@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Call Touch Lock</string>
+    <string name="service_notification_title">Call Touch Lock is on</string>
+    <string name="service_notification_text">Touch is ignored during calls</string>
+
+    <string name="status_on">Protection is on</string>
+    <string name="status_on_text">During a call the screen ignores touch. The call stays visible; hang up with the red key.</string>
+    <string name="status_blocking">Touch is blocked now</string>
+    <string name="status_blocking_text">A call is active (or a test is running). Keys still work.</string>
+    <string name="status_off">Protection is off</string>
+    <string name="status_off_text">Turn it on so cheek and pocket taps can\'t hit the call screen.</string>
+    <string name="status_needs_overlay">Permission needed</string>
+    <string name="status_needs_overlay_text">Allow “Display over other apps”, otherwise touch can\'t be blocked.</string>
+
+    <string name="status_saver">Battery Saver will stop protection</string>
+    <string name="status_saver_text">With Battery Saver on, this phone closes apps soon after the screen locks, this one included, and the next call is not protected.</string>
+    <string name="row_saver">Battery Saver is on</string>
+    <string name="row_saver_sub">Closes this app after locking · turn it off</string>
+    <string name="row_protection">Protection</string>
+    <string name="row_protection_sub">Block touch while a call is active</string>
+    <string name="row_overlay">Display over other apps</string>
+    <string name="row_overlay_sub">Required to block touch</string>
+    <string name="row_phone">Phone state</string>
+    <string name="row_phone_sub">Optional · lets you answer a 2nd call by touch</string>
+    <string name="row_boot">Start after boot</string>
+    <string name="row_boot_sub">Also restarts itself after updates</string>
+    <string name="row_test">Test for 5 seconds</string>
+    <string name="row_test_sub">Touch is ignored now; keys keep working</string>
+    <string name="granted">OK</string>
+    <string name="required">NEEDED</string>
+    <string name="optional">OFF</string>
+    <string name="test_started">Touch is blocked for 5 seconds</string>
+    <string name="test_needs_on">Turn protection on first</string>
+    <string name="test_needs_overlay">Allow “Display over other apps” first</string>
+    <string name="footer_hint">Works with calls on either SIM. The call screen stays visible; only touch is swallowed, so the red key, volume and the keypad keep working. A ringing call is never blocked, so you can answer it.</string>
+
+    <string name="hint_move">Move</string>
+    <string name="hint_select">Select</string>
+</resources>
