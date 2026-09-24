@@ -22,7 +22,17 @@
     <string name="row_overlay">Display over other apps</string>
     <string name="row_overlay_sub">Required to block touch</string>
     <string name="row_phone">Phone state</string>
-    <string name="row_phone_sub">Optional · lets you answer a 2nd call by touch</string>
+    <string name="row_phone_sub">Optional · also spots a 2nd call ringing during a call</string>
+    <string name="row_ringing">Ringing calls: keys only</string>
+    <string name="row_ringing_sub">Answer and reject with the keys, not the screen</string>
+    <string name="row_guard">Lock screen: keys only</string>
+    <string name="row_guard_sub">Swipe can\'t unlock · left key, then *</string>
+    <string name="row_guard_off_sub">Turn on “Call Touch Lock” in Accessibility</string>
+    <string name="row_guard_stuck_sub">Not running · turn it off and on in Accessibility</string>
+    <string name="guard_open_settings">Turn on “Call Touch Lock” here</string>
+    <string name="guard_hint">Locked · left key, then *</string>
+    <string name="a11y_guard_label">Call Touch Lock</string>
+    <string name="a11y_guard_desc">Lock screen, keys only: touch is ignored while the lock screen is showing, so the phone can\'t be swiped open in a pocket. Unlock with the left key, then *. A ringing alarm still takes touch; calls follow the call settings. Does not read the screen or key presses.</string>
     <string name="row_boot">Start after boot</string>
     <string name="row_boot_sub">Also restarts itself after updates</string>
     <string name="row_test">Test for 5 seconds</string>
@@ -33,7 +43,7 @@
     <string name="test_started">Touch is blocked for 5 seconds</string>
     <string name="test_needs_on">Turn protection on first</string>
     <string name="test_needs_overlay">Allow “Display over other apps” first</string>
-    <string name="footer_hint">Works with calls on either SIM. The call screen stays visible; only touch is swallowed, so the red key, volume and the keypad keep working. A ringing call is never blocked, so you can answer it.</string>
+    <string name="footer_hint">Works with calls on either SIM. The call screen stays visible; only touch is swallowed, so the red key, volume and the keypad keep working. A ringing call is blocked too (answer or reject it with the keys) unless you turn that off.</string>
 
     <string name="hint_move">Move</string>
     <string name="hint_select">Select</string>

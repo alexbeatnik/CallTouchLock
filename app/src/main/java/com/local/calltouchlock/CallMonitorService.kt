@@ -106,8 +106,10 @@ class CallMonitorService : Service() {
 
     private fun applyState(state: SimpleCallState) {
         val testing = SystemClock.uptimeMillis() < testUntil
-        val inCall = settings.serviceEnabled && settings.blockDuringCalls && state == SimpleCallState.OFFHOOK
-        if ((inCall || testing) && Settings.canDrawOverlays(this)) {
+        val shieldedState = state == SimpleCallState.OFFHOOK ||
+            (state == SimpleCallState.RINGING && settings.blockWhileRinging)
+        val inCall = settings.serviceEnabled && settings.blockDuringCalls && shieldedState
+        if ((inCall || testing) && overlay.canShow()) {
             if (!overlay.isShowing) {
                 overlay.show()
                 handler.removeCallbacks(watchdog)

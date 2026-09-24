@@ -1,6 +1,7 @@
 package com.local.calltouchlock
 
 import android.Manifest
+import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
@@ -27,6 +28,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var statusText: TextView
     private lateinit var rowSaver: SettingRow
     private lateinit var rowProtection: SettingRow
+    private lateinit var rowGuard: SettingRow
+    private lateinit var rowRinging: SettingRow
     private lateinit var rowOverlay: SettingRow
     private lateinit var rowPhone: SettingRow
     private lateinit var rowBoot: SettingRow
@@ -52,6 +55,8 @@ class MainActivity : AppCompatActivity() {
         statusText = findViewById(R.id.statusText)
         rowSaver = SettingRow(findViewById(R.id.rowSaver), R.drawable.ic_battery_alert, R.string.row_saver)
         rowProtection = SettingRow(findViewById(R.id.rowProtection), R.drawable.ic_shield, R.string.row_protection)
+        rowRinging = SettingRow(findViewById(R.id.rowRinging), R.drawable.ic_ringing, R.string.row_ringing)
+        rowGuard = SettingRow(findViewById(R.id.rowGuard), R.drawable.ic_lock, R.string.row_guard)
         rowOverlay = SettingRow(findViewById(R.id.rowOverlay), R.drawable.ic_layers, R.string.row_overlay)
         rowPhone = SettingRow(findViewById(R.id.rowPhone), R.drawable.ic_call, R.string.row_phone)
         rowBoot = SettingRow(findViewById(R.id.rowBoot), R.drawable.ic_power, R.string.row_boot)
@@ -82,6 +87,26 @@ class MainActivity : AppCompatActivity() {
             if (settings.serviceEnabled) CallMonitorService.start(this) else CallMonitorService.stop(this)
             refreshUi()
         }
+        rowRinging.setSubtitle(getString(R.string.row_ringing_sub))
+        rowRinging.root.setOnClickListener {
+            settings.blockWhileRinging = !settings.blockWhileRinging
+            if (settings.serviceEnabled) CallMonitorService.refresh(this)
+            refreshUi()
+        }
+        rowGuard.root.setOnClickListener {
+            if (!isGuardServiceEnabled()) {
+                // Accessibility services are switched on by the user, in Settings.
+                toast(R.string.guard_open_settings)
+                try {
+                    startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                } catch (_: Exception) {
+                }
+            } else {
+                settings.lockScreenGuard = !settings.lockScreenGuard
+                LockGuardService.instance?.refresh()
+                refreshUi()
+            }
+        }
         rowOverlay.root.setOnClickListener {
             try {
                 startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName")))
@@ -102,7 +127,7 @@ class MainActivity : AppCompatActivity() {
         rowTest.root.setOnClickListener {
             when {
                 !settings.serviceEnabled -> toast(R.string.test_needs_on)
-                !Settings.canDrawOverlays(this) -> toast(R.string.test_needs_overlay)
+                !Settings.canDrawOverlays(this) && !LockGuardService.running -> toast(R.string.test_needs_overlay)
                 else -> {
                     CallMonitorService.test(this)
                     toast(R.string.test_started)
@@ -117,6 +142,7 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         CallMonitorService.uiListener = { refreshUi() }
+        LockGuardService.uiListener = { refreshUi() }
     }
 
     override fun onResume() {
@@ -128,6 +154,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStop() {
         CallMonitorService.uiListener = null
+        LockGuardService.uiListener = null
         super.onStop()
     }
 
@@ -157,6 +184,14 @@ class MainActivity : AppCompatActivity() {
         ImageViewCompat.setImageTintList(statusIcon, ColorStateList.valueOf(ContextCompat.getColor(this, color)))
 
         rowProtection.setToggle(enabled)
+        rowRinging.setToggle(settings.blockWhileRinging)
+        val guardService = isGuardServiceEnabled()
+        rowGuard.setSubtitle(getString(when {
+            !guardService -> R.string.row_guard_off_sub
+            !LockGuardService.running -> R.string.row_guard_stuck_sub
+            else -> R.string.row_guard_sub
+        }))
+        rowGuard.setToggle(guardService && settings.lockScreenGuard)
         rowOverlay.setBadge(if (overlay) R.string.granted else R.string.required, overlay, warn = !overlay)
         val phone = hasPhonePermission()
         rowPhone.setBadge(if (phone) R.string.granted else R.string.optional, phone, warn = false)
@@ -169,6 +204,15 @@ class MainActivity : AppCompatActivity() {
         ) {
             notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
+    }
+
+    /** Our lock screen service is switched on in Settings → Accessibility. */
+    private fun isGuardServiceEnabled(): Boolean {
+        val cr = contentResolver
+        if (Settings.Secure.getInt(cr, Settings.Secure.ACCESSIBILITY_ENABLED, 0) != 1) return false
+        val mine = ComponentName(this, LockGuardService::class.java)
+        return Settings.Secure.getString(cr, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES)
+            ?.split(':')?.any { ComponentName.unflattenFromString(it) == mine } == true
     }
 
     private fun hasPhonePermission(): Boolean =

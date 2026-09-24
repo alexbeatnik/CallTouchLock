@@ -38,6 +38,21 @@
                 android:value="Monitor telephony call state to show a touch-blocking overlay during active calls only" />
         </service>
 
+        <!-- Lock screen, keys only: a touch shield over the keyguard. Accessibility overlays are the only
+             app windows Android draws above the lock screen. -->
+        <service
+            android:name=".LockGuardService"
+            android:exported="false"
+            android:label="@string/a11y_guard_label"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/lock_guard_service" />
+        </service>
+
         <receiver
             android:name=".BootReceiver"
             android:exported="true"

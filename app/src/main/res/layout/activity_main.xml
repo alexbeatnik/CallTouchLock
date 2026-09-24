@@ -108,6 +108,14 @@
                 layout="@layout/item_setting" />
 
             <include
+                android:id="@+id/rowRinging"
+                layout="@layout/item_setting" />
+
+            <include
+                android:id="@+id/rowGuard"
+                layout="@layout/item_setting" />
+
+            <include
                 android:id="@+id/rowOverlay"
                 layout="@layout/item_setting" />
 

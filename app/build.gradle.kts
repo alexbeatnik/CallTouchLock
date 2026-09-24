@@ -4,7 +4,7 @@ plugins {
 }
 
 // Release builds get their version from the tag (see .github/workflows/release.yml).
-val appVersion: String = System.getenv("VERSION_NAME")?.removePrefix("v") ?: "1.1.0"
+val appVersion: String = System.getenv("VERSION_NAME")?.removePrefix("v") ?: "1.2.0"
 /** 1.2.3 -> 10203, so every release installs over the previous one. */
 val appVersionCode: Int = appVersion.split('.', '-').take(3).map { it.toIntOrNull() ?: 0 }
     .let { p -> p.getOrElse(0) { 0 } * 10000 + p.getOrElse(1) { 0 } * 100 + p.getOrElse(2) { 0 } }
